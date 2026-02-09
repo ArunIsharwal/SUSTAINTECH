@@ -18,6 +18,9 @@ import MyRequestshistory from "./pages/dashboard/MyRequests";
 import GreenPoints from "./pages/dashboard/GreenPoints";
 import { store } from "./store/store";
 import { Provider } from "react-redux";
+import FacultyMaintenanceStatus from "./pages/dashboard/FacultyMaintenanceStatus";
+import FacultyEventRequests from "./pages/dashboard/FacultyEventRequests";
+import FacultyDashboard from "./pages/dashboard/FacultyDashboard";
 
 const queryClient = new QueryClient();
 
@@ -62,7 +65,10 @@ const App = () => (
               element={<MaintenanceDashboard />}
             />
             <Route path="/verify-otp" element={<VerifyOtp />} />
-
+            <Route path="/dashboard/faculty" element={<FacultyDashboard />} />
+            <Route path="/dashboard/faculty/event-requests" element={<FacultyEventRequests />} />
+            <Route path="/dashboard/faculty/maintenance-status" element={<FacultyMaintenanceStatus />} />
+            
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>

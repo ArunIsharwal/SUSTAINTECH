@@ -419,9 +419,13 @@ const roleNavItems = {
     { icon: Wrench, label: "Report Issue", path: "/dashboard/student/maintenance" },
     { icon: BarChart3, label: "Green Points", path: "/dashboard/student/greenpoints" }, // ✅ FIX
   ],
-  faculty: [
-    { icon: Home, label: "Dashboard", path: "/dashboard/faculty" },
-  ],
+faculty: [
+  { icon: Home, label: "Dashboard", path: "/dashboard/faculty" },
+  { icon: Calendar, label: "Event Requests", path: "/dashboard/faculty/event-requests" },
+  { icon: Wrench, label: "Maintenance Status", path: "/dashboard/faculty/maintenance-status" },
+],
+
+
   admin: [
     { icon: Home, label: "Dashboard", path: "/dashboard/admin" },
   ],

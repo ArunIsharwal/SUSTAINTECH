@@ -73,7 +73,6 @@
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
-
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -98,8 +97,6 @@ app.use(
     credentials: true
   })
 );
-
-app.options("*", cors()); // ✅ preflight support
 
 app.use(express.json());
 app.use(cookieParser());

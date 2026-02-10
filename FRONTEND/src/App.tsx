@@ -24,7 +24,11 @@ import FacultyDashboard from "./pages/dashboard/FacultyDashboard";
 
 const queryClient = new QueryClient();
 
-export const baseUrl = import.meta.env.VITE_BASE_URL;
+// Base URL for backend API.
+// - In production (Vercel) we recommend setting VITE_BASE_URL as an env var.
+// - If it's missing, fall back to the deployed Render backend URL so things still work.
+export const baseUrl =
+  import.meta.env.VITE_BASE_URL || "https://opticampus-backend.onrender.com";
 
 const App = () => (
   <Provider store={store}>
@@ -66,9 +70,15 @@ const App = () => (
             />
             <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/dashboard/faculty" element={<FacultyDashboard />} />
-            <Route path="/dashboard/faculty/event-requests" element={<FacultyEventRequests />} />
-            <Route path="/dashboard/faculty/maintenance-status" element={<FacultyMaintenanceStatus />} />
-            
+            <Route
+              path="/dashboard/faculty/event-requests"
+              element={<FacultyEventRequests />}
+            />
+            <Route
+              path="/dashboard/faculty/maintenance-status"
+              element={<FacultyMaintenanceStatus />}
+            />
+
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -66,6 +66,10 @@ app.use("/api/maintenance", maintenance);
 /* ✅ PORT fallback only */
 const PORT = process.env.PORT || 5000;
 
+app.get("/", (req, res) => {
+  res.send("Hello Opticampus")
+})
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

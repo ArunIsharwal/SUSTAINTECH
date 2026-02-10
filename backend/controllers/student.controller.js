@@ -158,6 +158,7 @@ export const createIssue = async (req, res) => {
       studentId: userId,
       description,
       issueType,
+      status: "Pending"
     });
 
     res.status(201).json({

@@ -48,8 +48,35 @@ const MaintenanceDashboard = () => {
     fetchTickets();
   }, []);
 
+  const markAsSuccess = async (id) => {
+    try {
+      const res = await fetch(
+        `${baseUrl}/api/maintenance/update-status`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ issueId: id, status: "Success" }),
+        },
+      );
+
+      if (!res.ok) return;
+
+      // update UI instantly
+      setTickets((prev) =>
+        prev.map((ticket) =>
+          ticket._id === id ? { ...ticket, status: "Success" } : ticket,
+        ),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   console.log(tickets);
-  
+
   return (
     <DashboardLayout userRole="maintenance" userName="Tom Maintenance">
       {/* Header */}
@@ -61,8 +88,6 @@ const MaintenanceDashboard = () => {
           Track and manage all maintenance tickets efficiently.
         </p>
       </div>
-
-      
 
       {/* Ticket list */}
       <motion.div
@@ -108,7 +133,18 @@ const MaintenanceDashboard = () => {
                   {/* Right side */}
                   <div className="flex items-center gap-3">
                     <span>Status: </span>
-                    <Button size="sm">{ticket?.resolve == false ? "Pending" : "Success"}</Button>
+                    <Button
+                      size="sm"
+                      disabled={ticket?.status === "Success"}
+                      onClick={() => markAsSuccess(ticket._id)}
+                      className={
+                        ticket?.status == "Success"
+                          ? "bg-green-600 hover:bg-green-600"
+                          : "bg-yellow-500 hover:bg-yellow-600"
+                      }
+                    >
+                      {ticket?.status}
+                    </Button>
                   </div>
                 </div>
               </div>

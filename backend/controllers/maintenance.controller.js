@@ -23,3 +23,31 @@ export const getAllIssues = async (req, res) => {
     });
   }
 };
+
+export const updateIssueStatus = async (req, res) => {
+  try {
+
+    const { issueId, status } = req.body; 
+
+    if (!["Pending", "Success"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const issue = await Issues.findByIdAndUpdate(
+      issueId,
+      { status },
+      { new: true }
+    );
+
+    if (!issue) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
+
+    res.json({
+      message: `Issue ${status} successfully`,
+      issue,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

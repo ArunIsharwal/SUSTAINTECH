@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { baseUrl } from "@/App";
 
-
 const FacultyEventRequests = () => {
   const [events, setEvents] = useState<any[]>([]);
 
@@ -14,24 +13,19 @@ const FacultyEventRequests = () => {
     status: "Approved" | "Rejected",
   ) => {
     try {
-      const res = await fetch(
-        `${baseUrl}/api/staff/event/status`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ eventId, status }),
+      const res = await fetch(`${baseUrl}/api/staff/event/status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        credentials: "include",
+        body: JSON.stringify({ eventId, status }),
+      });
 
       const data = await res.json();
       console.log(data);
-      
 
       if (!res.ok) throw new Error("Failed to update status");
-
 
       setEvents((prev) =>
         prev.map((e) => (e._id === eventId ? data.event : e)),
@@ -53,7 +47,6 @@ const FacultyEventRequests = () => {
         });
         const data = await res.json();
         console.log(data);
-        
 
         if (!res.ok) throw new Error("Failed to fetch events");
 
@@ -76,7 +69,23 @@ const FacultyEventRequests = () => {
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
                 {event.title}
-                <Badge variant="outline">Pending</Badge>
+
+                <Badge
+                  variant={
+                    event.status === "Rejected"
+                      ? "destructive"
+                      : event.status === "Pending"
+                        ? "outline"
+                        : "secondary"
+                  }
+                  className={
+                    event.status === "Approved"
+                      ? "bg-green-100 text-green-700 border-green-300"
+                      : ""
+                  }
+                >
+                  {event.status}
+                </Badge>
               </CardTitle>
             </CardHeader>
 
@@ -97,21 +106,23 @@ const FacultyEventRequests = () => {
                 <b>Purpose:</b> {event.purpose}
               </p>
 
-              <div className="flex gap-3 pt-4">
-                <Button
-                  variant="hero"
-                  onClick={() => handleStatusChange(event._id, "Approved")}
-                >
-                  Approve
-                </Button>
+              {event.status === "Pending" && (
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    variant="hero"
+                    onClick={() => handleStatusChange(event._id, "Approved")}
+                  >
+                    Approve
+                  </Button>
 
-                <Button
-                  variant="destructive"
-                  onClick={() => handleStatusChange(event._id, "Rejected")}
-                >
-                  Reject
-                </Button>
-              </div>
+                  <Button
+                    variant="destructive"
+                    onClick={() => handleStatusChange(event._id, "Rejected")}
+                  >
+                    Reject
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}

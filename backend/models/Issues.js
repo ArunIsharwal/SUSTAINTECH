@@ -14,7 +14,7 @@ const issueSchema = new mongoose.Schema(
       required: true,
     },
     status: {
-      type: Boolean,
+      type: String,
       enum: ["Pending", "Success"],
       default: "Pending",
     },

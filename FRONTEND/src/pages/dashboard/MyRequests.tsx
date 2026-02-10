@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
-import { FileText, Clock, CheckCircle2, XCircle, Eye } from "lucide-react";
+import { FileText, Clock, CheckCircle2, XCircle, Eye, Wrench } from "lucide-react";
 import { baseUrl } from "@/App";
 
 const statusConfig: Record<string, any> = {
@@ -21,6 +21,11 @@ const statusConfig: Record<string, any> = {
     icon: XCircle,
     class: "text-destructive bg-destructive/10",
   },
+  success: {
+    label: "Success",
+    icon: CheckCircle2,
+    class: "text-success bg-success/10",
+  },
 };
 
 const MyRequestshistory = () => {
@@ -29,19 +34,35 @@ const MyRequestshistory = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const res = await fetch(`${baseUrl}/api/student/get-events`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        const [eventRes, issueRes] = await Promise.all([
+          fetch(`${baseUrl}/api/student/get-events`, {
+            credentials: "include",
+          }),
+          fetch(`${baseUrl}/api/student/get-issues`, {
+            credentials: "include",
+          }),
+        ]);
 
-        const data = await res.json();
+        const eventData = await eventRes.json();
+        const issueData = await issueRes.json();
 
-        if (!res.ok) return;
+        const events = (eventData.events || []).map((e: any) => ({
+          ...e,
+          requestType: "event",
+        }));
 
-        setRequests(Array.isArray(data.events) ? data.events : []);
+        const issues = (issueData.issues || []).map((i: any) => ({
+          ...i,
+          requestType: "issue",
+        }));
+
+        const merged = [...events, ...issues].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() -
+            new Date(a.createdAt).getTime()
+        );
+
+        setRequests(merged);
       } catch (error) {
         console.error(error);
       }
@@ -60,12 +81,12 @@ const MyRequestshistory = () => {
   };
 
   return (
-    <DashboardLayout userRole="student" userName="Arun">
+    <DashboardLayout userRole="student">
       {/* Header */}
       <div className="mb-8">
         <h1 className="font-display text-3xl font-bold mb-1">My Requests</h1>
         <p className="text-muted-foreground">
-          Track all event requests you’ve submitted for approval
+          All event and maintenance requests in one place
         </p>
       </div>
 
@@ -79,15 +100,14 @@ const MyRequestshistory = () => {
       {/* Requests List */}
       <div className="space-y-4">
         {requests.map((req, index) => {
-          const rawStatus = typeof req.status === "string"
-            ? req.status.toLowerCase()
-            : "pending";
+          const rawStatus =
+            typeof req.status === "string"
+              ? req.status.toLowerCase()
+              : "pending";
 
-          const statusKey = statusConfig[rawStatus]
-            ? rawStatus
-            : "pending";
+          const statusData =
+            statusConfig[rawStatus] || statusConfig.pending;
 
-          const statusData = statusConfig[statusKey];
           const StatusIcon = statusData.icon;
 
           return (
@@ -95,20 +115,35 @@ const MyRequestshistory = () => {
               key={req._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.08 }}
+              transition={{ delay: index * 0.05 }}
               className="bg-card border border-border rounded-2xl p-6 flex items-center justify-between hover:shadow-elegant transition-all"
             >
               {/* Left */}
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <FileText className="w-6 h-6 text-primary" />
+                  {req.requestType === "event" ? (
+                    <FileText className="w-6 h-6 text-primary" />
+                  ) : (
+                    <Wrench className="w-6 h-6 text-primary" />
+                  )}
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-lg">{req.title}</h3>
+                  <h3 className="font-semibold text-lg">
+                    {req.requestType === "event"
+                      ? req.title
+                      : req.issueType}
+                  </h3>
+
                   <p className="text-sm text-muted-foreground">
-                    Requested on {formatDate(req.createdAt)}
+                    {req.requestType === "event"
+                      ? `Requested on ${formatDate(req.createdAt)}`
+                      : req.description}
                   </p>
+
+                  <span className="inline-block mt-1 text-xs px-2 py-1 rounded bg-muted">
+                    {req.requestType === "event" ? "Event" : "Issue"}
+                  </span>
                 </div>
               </div>
 

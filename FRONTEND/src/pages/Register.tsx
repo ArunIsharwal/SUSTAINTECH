@@ -39,7 +39,7 @@
 //   const handleSubmit = async (e: React.FormEvent) => {
 //     e.preventDefault();
 //     setIsLoading(true);
-    
+
 //     // Simulate registration - will be replaced with actual auth
 //     setTimeout(() => {
 //       setIsLoading(false);
@@ -55,7 +55,7 @@
 //           <div className="absolute top-20 left-20 w-64 h-64 bg-white/20 rounded-full blur-3xl" />
 //           <div className="absolute bottom-40 right-20 w-96 h-96 bg-accent/30 rounded-full blur-3xl" />
 //         </div>
-        
+
 //         <div className="relative z-10 flex flex-col justify-center px-16">
 //           <Link to="/" className="flex items-center gap-3 mb-8">
 //             <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -63,7 +63,7 @@
 //             </div>
 //             <span className="font-display text-3xl font-bold text-white">OptiCampus</span>
 //           </Link>
-          
+
 //           <h1 className="font-display text-4xl font-bold text-white mb-4">
 //             Join the Sustainable Campus Movement
 //           </h1>
@@ -71,7 +71,7 @@
 //             Create your account to start managing resources efficiently and 
 //             contribute to a greener campus environment.
 //           </p>
-          
+
 //           <div className="mt-12 grid grid-cols-2 gap-4">
 //             {[
 //               { icon: GraduationCap, label: "Book Rooms" },
@@ -269,7 +269,15 @@ const Register = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    if (!formData.role) {
+        alert("Please select a role");
+        setIsLoading(false);
+        return;
+      }
+
     try {
+      
+
       const res = await fetch(`${baseUrl}/api/auth/register`, {
         method: "POST",
         headers: {
@@ -377,26 +385,23 @@ const Register = () => {
                     <Label
                       key={role.id}
                       htmlFor={role.id}
-                      className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                        formData.role === role.id
+                      className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.role === role.id
                           ? "border-primary bg-primary/5"
                           : "border-border hover:border-primary/30"
-                      }`}
+                        }`}
                     >
                       <RadioGroupItem value={role.id} id={role.id} className="sr-only" />
                       <role.icon
-                        className={`w-6 h-6 ${
-                          formData.role === role.id
+                        className={`w-6 h-6 ${formData.role === role.id
                             ? "text-primary"
                             : "text-muted-foreground"
-                        }`}
+                          }`}
                       />
                       <span
-                        className={`text-sm font-medium ${
-                          formData.role === role.id
+                        className={`text-sm font-medium ${formData.role === role.id
                             ? "text-primary"
                             : "text-foreground"
-                        }`}
+                          }`}
                       >
                         {role.label}
                       </span>

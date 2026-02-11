@@ -12,7 +12,7 @@ import MaintenanceDashboard from "./pages/dashboard/MaintenanceDashboard";
 import EventRequestPage from "./pages/dashboard/EventRequestPage";
 import MaintenanceReportPage from "./pages/dashboard/MaintenanceReportPage";
 import NotFound from "./pages/NotFound";
-import VerifyOtp from "./pages/VerifyOtp";
+
 import MyRequests from "./pages/dashboard/MyRequests";
 import MyRequestshistory from "./pages/dashboard/MyRequests";
 import GreenPoints from "./pages/dashboard/GreenPoints";
@@ -68,7 +68,6 @@ const App = () => (
               path="/dashboard/maintenance"
               element={<MaintenanceDashboard />}
             />
-            <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/dashboard/faculty" element={<FacultyDashboard />} />
             <Route
               path="/dashboard/faculty/event-requests"

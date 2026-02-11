@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { userName } from "./StudentDashboard";
 import {
   Calendar,
   Users,
@@ -20,6 +19,9 @@ import {
 import { baseUrl } from "@/App";
 
 const EventRequestPage = () => {
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userName = storedUser?.name || "Student";
+  
   const [step, setStep] = useState(1);
   // const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
   const [formData, setFormData] = useState({

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { userName } from "./StudentDashboard";
 import {
   ScanLine,
   Wrench,
@@ -29,6 +28,9 @@ const issueTypes = [
 ];
 
 const MaintenanceReportPage = () => {
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userName = storedUser?.name || "Student";
+  
   const [step, setStep] = useState<"form" | "success">("form");
   const [selectedIssue, setSelectedIssue] = useState<string>("");
   const [description, setDescription] = useState("");

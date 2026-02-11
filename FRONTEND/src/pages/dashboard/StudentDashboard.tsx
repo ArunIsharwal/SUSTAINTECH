@@ -156,11 +156,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// ✅ READ USER FROM LOCAL STORAGE
-const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-
-export const userName = storedUser?.name || "Student";
-
 const recentRequests = [
   { id: 1, title: "Annual Tech Fest Meeting", status: "approved", room: "A-201", date: "Feb 8, 2024" },
   { id: 2, title: "Study Group Session", status: "pending", room: "Library L2", date: "Feb 10, 2024" },
@@ -174,6 +169,9 @@ const statusStyles = {
 };
 
 const StudentDashboard = () => {
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userName = storedUser?.name || "Student";
+
   return (
     <DashboardLayout userRole="student" userName={userName}>
       {/* Welcome section */}

@@ -387,7 +387,7 @@
 
 
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Leaf,
@@ -442,6 +442,28 @@ const DashboardLayout = ({
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [storedUserName, setStoredUserName] = useState<string | null>(null);
+
+  // Always prefer the currently logged-in user saved in localStorage.
+  // This avoids showing hardcoded/incorrect names when switching dashboards.
+  useEffect(() => {
+    const raw = localStorage.getItem("user");
+    if (!raw) {
+      setStoredUserName(null);
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      setStoredUserName(typeof parsed?.name === "string" ? parsed.name : null);
+    } catch {
+      setStoredUserName(null);
+    }
+  }, []);
+
+  const displayName = useMemo(() => {
+    return storedUserName || userName || "User";
+  }, [storedUserName, userName]);
 
   const navItems = roleNavItems[userRole];
 
@@ -502,7 +524,7 @@ const DashboardLayout = ({
               </div>
               <div>
                 <p className="text-sm font-medium text-sidebar-foreground">
-                  {userName}
+                  {displayName}
                 </p>
                 <p className="text-xs text-sidebar-foreground/50 capitalize">
                   {userRole}

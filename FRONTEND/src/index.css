@@ -199,3 +199,48 @@
     }
   }
 }
+
+
+
+/* ===== GOOGLE TRANSLATE CLEAN FIX ===== */
+
+
+/* .goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0px !important;
+}
+
+
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  font-size: 0px !important;
+} */
+
+
+
+/* ===== FULL GOOGLE TRANSLATE BAR REMOVE ===== */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0px !important;
+}
+
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  font-size: 0px !important;
+}
+
+html {
+  top: 0px !important;
+}

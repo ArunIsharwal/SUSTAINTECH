@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Leaf, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import LanguageSelector from "@/components/LanguageSelector";
+
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,14 +47,31 @@ const Header = () => {
             </div>
 
             {/* Desktop CTA */}
-            <div className="hidden md:flex items-center gap-3">
+            {/* <div className="hidden md:flex items-center gap-3">
               <Button variant="ghost" asChild>
                 <Link to="/login">Sign In</Link>
               </Button>
               <Button variant="default" asChild>
                 <Link to="/register">Get Started</Link>
               </Button>
+            </div> */}
+
+            <div className="hidden md:flex items-center gap-3">
+
+            <LanguageSelector />
+
+            <Button variant="ghost" asChild>
+              <Link to="/login">Sign In</Link>
+            </Button>
+
+            <Button variant="default" asChild>
+              <Link to="/register">Get Started</Link>
+            </Button>
+
             </div>
+
+
+
 
             {/* Mobile menu button */}
             <Button

@@ -26,8 +26,40 @@ dist-ssr
 
 
 
-.venv/
-venv/
-__pycache__/
-*.pyc
+# ==============================
+# ENV FILES (DO NOT PUSH)
+# ==============================
+
+# Root env
 .env
+
+# Python AI chatbot env
+aimlchatbot/.env
+
+# Node backend env
+backend/.env
+
+# Vite frontend env
+FRONTEND/.env
+
+
+# ==============================
+# PYTHON
+# ==============================
+aimlchatbot/__pycache__/
+aimlchatbot/.venv/
+*.pyc
+
+
+# ==============================
+# NODE
+# ==============================
+backend/node_modules/
+FRONTEND/node_modules/
+
+
+# ==============================
+# LOGS
+# ==============================
+*.log
+npm-debug.log*

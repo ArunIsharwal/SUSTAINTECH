@@ -27,7 +27,7 @@ app.add_middleware(
 
 client = InferenceClient(api_key=HF_TOKEN)
 
-# Schema for the response expected by the frontend
+
 SYSTEM_MESSAGE = {
     "role": "system",
     "content": (
@@ -91,14 +91,14 @@ async def chat_api(req: ChatRequest):
             ],
             max_tokens=1000,
             temperature=0.7,
-            stream=False, # We need the full response to parse JSON
+            stream=False, 
         )
         
         content = response.choices[0].message.content
         
-        # Attempt to parse JSON from the response
+     
         try:
-            # Find the first '{' and last '}' to extract JSON in case of extra text
+
             start = content.find('{')
             end = content.rfind('}') + 1
             if start != -1 and end != -1:
@@ -108,8 +108,6 @@ async def chat_api(req: ChatRequest):
             else:
                  raise ValueError("No JSON found in response")
         except json.JSONDecodeError:
-             # Fallback if valid JSON isn't returned, though we instructed it to.
-             # Construct a fallback response
              return {
                 "summary": ["Response parsed incorrectly.", "Refer to elaboration."],
                 "elaboration": content,

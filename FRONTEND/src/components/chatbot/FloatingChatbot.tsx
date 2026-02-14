@@ -17,7 +17,7 @@ const FloatingChatbot = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5001/api/chat", {
+      const res = await fetch(`${import.meta.env.VITE_HUGE_BASE_URL}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -26,7 +26,7 @@ const FloatingChatbot = () => {
       });
 
       const data = await res.json();
-
+      console.log("API DATA:", data);
       // ⭐ STRUCTURED BOT MESSAGE
       const botMsg = {
         role: "bot",

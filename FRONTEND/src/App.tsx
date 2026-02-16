@@ -27,6 +27,7 @@ import PapersSection from "./components/papersection/PapersSection";
 import PaperUpload from "./components/papersection/PaperUpload";
 import ArchiveAdmin from "./components/papersection/Archiveadmin";
 import AdminNavbar from "./components/papersection/Adminnavbar";
+import MaintenanceEvents from "./pages/dashboard/MaintenanceEvents";
 
 
 const queryClient = new QueryClient();
@@ -91,6 +92,7 @@ const App = () => (
 
             {/* Maintenance */}
             <Route path="/dashboard/maintenance" element={<MaintenanceDashboard />} />
+            <Route path="/dashboard/maintenance/events" element={<MaintenanceEvents />} />
 
             {/* Archive Admin */}
             <Route path="/archiveadmin" element={<ArchiveAdmin />} />

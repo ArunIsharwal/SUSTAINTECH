@@ -46,7 +46,7 @@ const roleNavItems = {
   ],
   maintenance: [
     { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/maintenance" },
-    { icon: Wrench, label: "Active Tasks", path: "/dashboard/maintenance/events" },
+    { icon: Wrench, label: "Events", path: "/dashboard/maintenance/events" },
     // { icon: FileText, label: "Work Logs", path: "/dashboard/maintenance/logs" },
   ],
 };

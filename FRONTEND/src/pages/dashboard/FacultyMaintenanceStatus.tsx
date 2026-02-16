@@ -158,10 +158,6 @@ const FacultyMaintenanceStatus = () => {
 
                       <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-muted-foreground">
                         <div className="flex items-center gap-1 bg-muted px-2 py-1 rounded">
-                          <MapPin className="w-3 h-3" /> 
-                          {issue.location || "Department Premises"}
-                        </div>
-                        <div className="flex items-center gap-1 bg-muted px-2 py-1 rounded">
                           <Wrench className="w-3 h-3" /> 
                           Reported: {new Date(issue.createdAt).toLocaleDateString()}
                         </div>

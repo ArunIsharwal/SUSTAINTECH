@@ -417,7 +417,6 @@ const roleNavItems = {
     { icon: Calendar, label: "Request Event", path: "/dashboard/student/request" },
     { icon: FileText, label: "My Requests", path: "/dashboard/student/myrequest" }, // ✅ FIX
     { icon: Wrench, label: "Report Issue", path: "/dashboard/student/maintenance" },
-    { icon: BarChart3, label: "Green Points", path: "/dashboard/student/greenpoints" }, // ✅ FIX
   ],
 faculty: [
   { icon: Home, label: "Dashboard", path: "/dashboard/faculty" },
@@ -533,7 +532,7 @@ const DashboardLayout = ({
             </div>
 
             <Button
-              variant="ghost"
+              
               className="w-full justify-start"
               onClick={handleLogout}
             >

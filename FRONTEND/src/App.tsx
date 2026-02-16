@@ -278,7 +278,7 @@ import MaintenanceReportPage from "./pages/dashboard/MaintenanceReportPage";
 import NotFound from "./pages/NotFound";
 
 import MyRequestshistory from "./pages/dashboard/MyRequests";
-import GreenPoints from "./pages/dashboard/GreenPoints";
+
 import { store } from "./store/store";
 import { Provider } from "react-redux";
 import FacultyMaintenanceStatus from "./pages/dashboard/FacultyMaintenanceStatus";
@@ -311,7 +311,7 @@ const App = () => (
             <Route path="/dashboard/student/request" element={<EventRequestPage />} />
             <Route path="/dashboard/student/maintenance" element={<MaintenanceReportPage />} />
             <Route path="/dashboard/student/myrequest" element={<MyRequestshistory />} />
-            <Route path="/dashboard/student/greenpoints" element={<GreenPoints />} />
+
 
             {/* Admin */}
             <Route path="/dashboard/admin" element={<AdminDashboard />} />

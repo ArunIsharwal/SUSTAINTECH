@@ -8,7 +8,7 @@ export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-    // ✅ STUDENT EMAIL VALIDATION (UNCHANGED LOGIC)
+    // STUDENT EMAIL VALIDATION (UNCHANGED LOGIC)
     if (role === "student") {
       const studentEmailRegex =
         /^(2022|2023|2024|2025)(kuec|kucp|kuad)\d{4}@iiitkota\.ac\.in$/;
@@ -21,20 +21,20 @@ export const register = async (req, res) => {
       }
     }
 
-    // ✅ CHECK EXISTING USER
+    // CHECK EXISTING USER
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // ✅ HASH PASSWORD (UNCHANGED)
+    //  HASH PASSWORD (UNCHANGED)
     const hashedPassword = crypto
       .createHash("sha256")
       .update(password)
       .digest("hex");
 
-    // ✅ CREATE USER (NO OTP NOW)
+    // CREATE USER (NO OTP NOW)
     const newUser = await User.create({
       name,
       email,
@@ -43,7 +43,7 @@ export const register = async (req, res) => {
       isEmailVerified: true,
     });
 
-    // ✅ CREATE TOKEN (UNCHANGED FLOW)
+    //  CREATE TOKEN (UNCHANGED FLOW)
     const token = generateToken({ userId: newUser._id });
 
     res.cookie("token", token, {
@@ -69,25 +69,25 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 1️⃣ CHECK USER
+    //  CHECK USER
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // 2️⃣ HASH PASSWORD
+    // HASH PASSWORD
     const hashedPassword = crypto
       .createHash("sha256")
       .update(password)
       .digest("hex");
 
-    // 3️⃣ COMPARE PASSWORD
+    //  COMPARE PASSWORD
     if (hashedPassword !== user.password) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // 4️⃣ GENERATE TOKEN
+    //  GENERATE TOKEN
     const token = generateToken({ userId: user._id });
 
     res.cookie("token", token, {
@@ -96,7 +96,7 @@ export const login = async (req, res) => {
       sameSite: "None",
     });
 
-    // 5️⃣ RETURN USER DATA
+    //  RETURN USER DATA
     return res.status(200).json({
       message: "Login successful",
       name: user.name,

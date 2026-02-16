@@ -1,89 +1,55 @@
+
 import os
+import json
+import google.generativeai as genai
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from dotenv import load_dotenv
+
 load_dotenv()
 
+app = FastAPI()
 
-api_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+# Config
+GEMINI_KEY = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=GEMINI_KEY)
+model = genai.GenerativeModel('gemini-1.5-flash')
 
-try:
-    from huggingface_hub import InferenceClient
-except Exception:
-    InferenceClient = None
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+class ChatRequest(BaseModel):
+    message: str
 
-client = None
-if InferenceClient is not None and api_token:
+@app.post("/chat")
+def chat(req: ChatRequest):
+    prompt = (
+        "You are a sustainability assistant. "
+        "Reply with valid JSON only: {\"summary\": [], \"elaboration\": \"\"}. "
+        f"User: {req.message}"
+    )
+    
     try:
-        print("Initializing HuggingFace Inference Client...")
-        client = InferenceClient(api_key=api_token)
+        response = model.generate_content(prompt)
+        text = response.text.replace("```json", "").replace("```", "").strip()
+        
+        try:
+            data = json.loads(text)
+            return data
+        except:
+            return {
+                "summary": ["Response"],
+                "elaboration": text
+            }
+            
     except Exception as e:
-        print(f"Failed to initialize InferenceClient: {e}")
-        client = None
-else:
-    if not api_token:
-        print("Error: HUGGINGFACEHUB_API_TOKEN not found in .env file.")
-    if InferenceClient is None:
-        print("Error: huggingface_hub not installed.")
-
-print("System: Chatbot initialized. Type 'exit' to quit.")
-
-
-
-system_message = {
-    "role": "system",
-    "content": """You are a helpful AI assistant. when answering questions:
-
-1. BE CONCISE AND STRUCTURED:
-   - Use bullet points for lists and steps.
-   - Keep answers clear and easy to read.
-
-2. PROVIDE PRACTICAL ADVICE:
-   - Focus on actionable steps and best practices.
-   - Explain 'how' and 'why' clearly.
-
-3. TONE:
-   - Professional, helpful, and encouraging.
-
-Example format:
-- Point 1
-- Point 2
-"""
-}
-
-chat_history = [system_message]
-
-while True:
-    user_input = input("You: ")
-    if user_input.lower() == "exit":
-        break
-
-    try:
-        if client is not None:
-           
-            chat_history.append({"role": "user", "content": user_input})
-            
-           
-            response = client.chat_completion(
-                model="meta-llama/Meta-Llama-3-8B-Instruct",
-                messages=chat_history,
-                max_tokens=256,
-                temperature=0.7,
-            )
-            
-           
-            bot_text = response.choices[0].message.content.strip()
-            
-           
-            chat_history.append({"role": "assistant", "content": bot_text})
-            
-            print("Bot:", bot_text)
-        else:
-            print("Error: Client not available.")
-            break
-
-    except Exception as e:
-        import traceback
-        print("\nError invoking model:")
-        traceback.print_exc()
-        print("\nMake sure your HuggingFace token is valid and in the .env file.")
-        break
+        return {
+            "summary": ["Error"],
+            "elaboration": str(e)
+        }

@@ -155,23 +155,37 @@ import {
   FileText,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { RootState } from "@/store/store";
+import useGetEventsForStudents from "@/hooks/GetEventsForStudents";
 
-const recentRequests = [
-  { id: 1, title: "Annual Tech Fest Meeting", status: "approved", room: "A-201", date: "Feb 8, 2024" },
-  { id: 2, title: "Study Group Session", status: "pending", room: "Library L2", date: "Feb 10, 2024" },
-  { id: 3, title: "Club Registration Drive", status: "rejected", room: "Main Hall", date: "Feb 5, 2024" },
-];
+// const recentRequests = [
+//   { id: 1, title: "Annual Tech Fest Meeting", status: "approved", room: "A-201", date: "Feb 8, 2024" },
+//   { id: 2, title: "Study Group Session", status: "pending", room: "Library L2", date: "Feb 10, 2024" },
+//   { id: 3, title: "Club Registration Drive", status: "rejected", room: "Main Hall", date: "Feb 5, 2024" },
+// ];
 
-const statusStyles = {
-  approved: { icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
-  pending: { icon: Clock, color: "text-warning", bg: "bg-warning/10" },
-  rejected: { icon: XCircle, color: "text-destructive", bg: "bg-destructive/10" },
-};
+// const statusStyles = {
+//   approved: { icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
+//   pending: { icon: Clock, color: "text-warning", bg: "bg-warning/10" },
+//   rejected: { icon: XCircle, color: "text-destructive", bg: "bg-destructive/10" },
+// };
 
-const StudentDashboard = () => {
+const StudentDashboard =  () => {
+   useGetEventsForStudents();
   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userName = storedUser?.name || "Student";
+    const { totalEvents } = useSelector((state: RootState) => state.events);
+    const { totalSuccessRequests } = useSelector((state: RootState) => state.events);
+    const { totalPendingRequests } = useSelector((state: RootState) => state.events);
+    // const [numbers, setNumbers] = useState<Number | null>(0);
 
+
+    console.log(totalEvents);
+    console.log(totalSuccessRequests);
+    console.log(totalPendingRequests);
+    
   return (
     <DashboardLayout userRole="student" userName={userName}>
       {/* Welcome section */}
@@ -187,10 +201,9 @@ const StudentDashboard = () => {
       {/* Quick stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: "Active Requests", value: "3", icon: FileText, color: "text-primary" },
-          { label: "Approved Events", value: "12", icon: CheckCircle2, color: "text-success" },
-          { label: "Issues Reported", value: "5", icon: Wrench, color: "text-warning" },
-          { label: "Green Points", value: "245", icon: Leaf, color: "text-primary" },
+          { label: "Active Requests", value: totalPendingRequests, icon: FileText, color: "text-primary" },
+          { label: "Approved Events", value: totalSuccessRequests, icon: CheckCircle2, color: "text-success" },
+          { label: "Issues Reported", value: totalEvents, icon: Wrench, color: "text-warning" },
         ].map((stat, index) => (
           <motion.div
             key={stat.label}

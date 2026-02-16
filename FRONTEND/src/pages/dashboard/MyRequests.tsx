@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
-import { FileText, Clock, CheckCircle2, XCircle, Eye, Wrench } from "lucide-react";
+import {
+  FileText,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Eye,
+  Wrench,
+} from "lucide-react";
 import { baseUrl } from "@/App";
 
 const statusConfig: Record<string, any> = {
@@ -46,6 +53,10 @@ const MyRequestshistory = () => {
         const eventData = await eventRes.json();
         const issueData = await issueRes.json();
 
+        console.log(eventData);
+        console.log(issueData);
+        
+
         const events = (eventData.events || []).map((e: any) => ({
           ...e,
           requestType: "event",
@@ -58,8 +69,7 @@ const MyRequestshistory = () => {
 
         const merged = [...events, ...issues].sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() -
-            new Date(a.createdAt).getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
 
         setRequests(merged);
@@ -105,8 +115,7 @@ const MyRequestshistory = () => {
               ? req.status.toLowerCase()
               : "pending";
 
-          const statusData =
-            statusConfig[rawStatus] || statusConfig.pending;
+          const statusData = statusConfig[rawStatus] || statusConfig.pending;
 
           const StatusIcon = statusData.icon;
 
@@ -130,9 +139,7 @@ const MyRequestshistory = () => {
 
                 <div>
                   <h3 className="font-semibold text-lg">
-                    {req.requestType === "event"
-                      ? req.title
-                      : req.issueType}
+                    {req.requestType === "event" ? req.title : req.issueType}
                   </h3>
 
                   <p className="text-sm text-muted-foreground">

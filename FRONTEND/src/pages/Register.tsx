@@ -535,7 +535,6 @@ import { baseUrl } from "@/App";
 const roles = [
   { id: "student", label: "Student", icon: GraduationCap, desc: "Request events & report issues" },
   { id: "faculty", label: "Faculty / HOD", icon: User, desc: "Approve requests & manage classes" },
-  { id: "admin", label: "Administrator", icon: Shield, desc: "Oversee all operations" },
   { id: "maintenance", label: "Maintenance", icon: Wrench, desc: "Handle repair tickets" },
 ];
 
@@ -729,7 +728,7 @@ const Register = () => {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="emailstudent=2025kuec2097@iiitkota.ac.in ,for other domain you can use anything"
+                    placeholder=""
                     className="pl-10 h-12"
                     value={formData.email}
                     onChange={(e) =>

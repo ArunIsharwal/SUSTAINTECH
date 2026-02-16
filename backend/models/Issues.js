@@ -18,6 +18,10 @@ const issueSchema = new mongoose.Schema(
       enum: ["Pending", "Success"],
       default: "Pending",
     },
+    pointsGiven: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );

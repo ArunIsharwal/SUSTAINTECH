@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "faculty", "admin", "maintenance"],
       default: "student",
     },
+    greenPoint: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );

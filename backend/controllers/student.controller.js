@@ -1,78 +1,79 @@
 import Event from "../models/Event.js";
 import jwt from "jsonwebtoken";
 import Issues from "../models/Issues.js";
+import User from "../models/User.js";
 
-  export const createEvent = async (req, res) => {
+export const createEvent = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token" });
+    }
+
+    let decoded;
     try {
-      const token = req.cookies.token;
+      decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    } catch (err) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
 
-      if (!token) {
-        return res.status(401).json({ message: "Unauthorized: No token" });
-      }
+    const { userId } = decoded;
 
-      let decoded;
-      try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      } catch (err) {
-        return res.status(401).json({ message: "Invalid token" });
-      }
+    const {
+      title,
+      description,
+      date,
+      startTime,
+      endTime,
+      expectedParticipants,
+      purpose,
+    } = req.body;
 
-      const { userId } = decoded;
+    console.log("Hello world");
 
-      const {
-        title,
-        description,
-        date,
-        startTime,
-        endTime,
-        expectedParticipants,
-        purpose,
-      } = req.body;
+    console.log(req.body);
 
-      console.log("Hello world");
-
-      console.log(req.body);
-
-      // basic validation
-      if (
-        !title ||
-        !description ||
-        !date ||
-        !startTime ||
-        !endTime ||
-        !expectedParticipants ||
-        !purpose
-      ) {
-        return res.status(400).json({
-          message: "All fields are required",
-        });
-      }
-
-      const event = await Event.create({
-        studentId: userId,
-        title,
-        description,
-        date,
-        startTime,
-        endTime,
-        expectedParticipants,
-        purpose,
-        status: "Pending"
-      });
-
-      res.status(201).json({
-        message: "Event created successfully",
-        event,
-      });
-    } catch (error) {
-      console.log("Error: ", error);
-
-      res.status(500).json({
-        message: "Error creating event",
-        error: error.message,
+    // basic validation
+    if (
+      !title ||
+      !description ||
+      !date ||
+      !startTime ||
+      !endTime ||
+      !expectedParticipants ||
+      !purpose
+    ) {
+      return res.status(400).json({
+        message: "All fields are required",
       });
     }
-  };
+
+    const event = await Event.create({
+      studentId: userId,
+      title,
+      description,
+      date,
+      startTime,
+      endTime,
+      expectedParticipants,
+      purpose,
+      status: "Pending",
+    });
+
+    res.status(201).json({
+      message: "Event created successfully",
+      event,
+    });
+  } catch (error) {
+    console.log("Error: ", error);
+
+    res.status(500).json({
+      message: "Error creating event",
+      error: error.message,
+    });
+  }
+};
 
 export const getEventsByStudentId = async (req, res) => {
   try {
@@ -83,7 +84,7 @@ export const getEventsByStudentId = async (req, res) => {
 
     const events = await Event.find({ studentId: userId });
 
-    console.log("Hello");
+    // console.log("Hello");
 
     if (!events.length) {
       return res.status(200).json({
@@ -158,7 +159,7 @@ export const createIssue = async (req, res) => {
       studentId: userId,
       description,
       issueType,
-      status: "Pending"
+      status: "Pending",
     });
 
     res.status(201).json({
@@ -170,6 +171,45 @@ export const createIssue = async (req, res) => {
 
     res.status(500).json({
       message: "Error creating Issue",
+      error: error.message,
+    });
+  }
+};
+
+export const getGreenPoints = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+
+    // console.log(req.cookies);
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token" });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    } catch (err) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const { userId } = decoded;
+
+    console.log("Hello world");
+
+    const user = await User.findById(userId);
+    const greenPoint = user.greenPoint;
+
+    console.log(greenPoint);
+
+    res.status(201).json({
+      greenPoint,
+    });
+  } catch (error) {
+    console.log("Error: ", error);
+
+    res.status(500).json({
+      message: "Error creating Gree Point",
       error: error.message,
     });
   }

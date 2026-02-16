@@ -177,7 +177,7 @@ const MaintenanceReportPage = () => {
                 issue shortly.
               </p>
 
-              <div className="bg-muted rounded-xl p-4 mb-6 text-left">
+              {/* <div className="bg-muted rounded-xl p-4 mb-6 text-left">
                 <div className="flex justify-between mb-2">
                   <span className="text-sm text-muted-foreground">
                     Ticket ID
@@ -198,31 +198,31 @@ const MaintenanceReportPage = () => {
                   <span className="text-sm text-muted-foreground">Status</span>
                   <span className="text-sm font-medium text-warning">Open</span>
                 </div>
-              </div>
+              </div> */}
 
-              <div className="flex items-center justify-center gap-2 text-primary mb-6 p-4 bg-primary/5 rounded-xl">
+              {/* <div className="flex items-center justify-center gap-2 text-primary mb-6 p-4 bg-primary/5 rounded-xl">
                 <Leaf className="w-5 h-5" />
                 <span className="text-sm font-medium">
                   +10 Green Points earned for reporting!
                 </span>
-              </div>
+              </div> */}
 
               {/* QR Code for tracking */}
-              <div className="bg-white p-4 rounded-xl inline-block mb-6">
+              {/* <div className="bg-white p-4 rounded-xl inline-block mb-6">
                 <QRCodeSVG
                   value="https://opticampus.app/ticket/MT-2024-0156"
                   size={120}
                   level="M"
                 />
-              </div>
-              <p className="text-xs text-muted-foreground mb-6">
+              </div> */}
+              {/* <p className="text-xs text-muted-foreground mb-6">
                 Scan to track your ticket status
-              </p>
+              </p> */}
 
               <Button
                 variant="hero"
                 size="lg"
-                onClick={() => setStep("scan")}
+                onClick={() => setStep("form")}
                 className="w-full"
               >
                 Report Another Issue

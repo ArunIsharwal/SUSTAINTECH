@@ -1,10 +1,10 @@
 // import { motion } from "framer-motion";
 // import DashboardLayout from "@/components/dashboard/DashboardLayout";
 // import { Button } from "@/components/ui/button";
-// import { 
-//   Calendar, 
-//   Wrench, 
-//   Leaf, 
+// import {
+//   Calendar,
+//   Wrench,
+//   Leaf,
 //   ArrowRight,
 //   Clock,
 //   CheckCircle2,
@@ -140,7 +140,6 @@
 
 // export default StudentDashboard;
 
-
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -156,9 +155,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RootState } from "@/store/store";
 import useGetEventsForStudents from "@/hooks/GetEventsForStudents";
+import { baseUrl } from "@/App";
 
 // const recentRequests = [
 //   { id: 1, title: "Annual Tech Fest Meeting", status: "approved", room: "A-201", date: "Feb 8, 2024" },
@@ -172,38 +172,91 @@ import useGetEventsForStudents from "@/hooks/GetEventsForStudents";
 //   rejected: { icon: XCircle, color: "text-destructive", bg: "bg-destructive/10" },
 // };
 
-const StudentDashboard =  () => {
-   useGetEventsForStudents();
+const StudentDashboard = () => {
+  const [green, setGreen] = useState(0);
+  useGetEventsForStudents();
   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userName = storedUser?.name || "Student";
-    const { totalEvents } = useSelector((state: RootState) => state.events);
-    const { totalSuccessRequests } = useSelector((state: RootState) => state.events);
-    const { totalPendingRequests } = useSelector((state: RootState) => state.events);
-    // const [numbers, setNumbers] = useState<Number | null>(0);
+  const { totalEvents } = useSelector((state: RootState) => state.events);
+  const { totalSuccessRequests } = useSelector(
+    (state: RootState) => state.events,
+  );
+  const { totalPendingRequests } = useSelector(
+    (state: RootState) => state.events,
+  );
 
+  useEffect(() => {
+    // console.log("Uss");
 
-    console.log(totalEvents);
-    console.log(totalSuccessRequests);
-    console.log(totalPendingRequests);
-    
+    const fetchPoints = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/student/get-green-point`, {
+          method: "GET",
+          credentials: "include", //
+        });
+
+        const data = await res.json();
+
+        console.log(data);
+
+        setGreen(data?.greenPoint ?? 0);
+        console.log("API value:", data?.greenPoint);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPoints();
+  }, []);
+
+  // const [numbers, setNumbers] = useState<Number | null>(0);
+
+  // console.log(totalEvents);
+  // console.log(totalSuccessRequests);
+  // console.log(totalPendingRequests);
+
   return (
     <DashboardLayout userRole="student" userName={userName}>
       {/* Welcome section */}
-      <div className="mb-8">
-        <h2 className="font-display text-3xl font-bold mb-2">
-          Welcome back, {userName}! 👋
-        </h2>
-        <p className="text-muted-foreground">
-          Here's what's happening with your campus activities.
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h2 className="font-display text-3xl font-bold mb-2">
+            Welcome back, {userName}! 👋
+          </h2>
+
+          <p className="text-muted-foreground">
+            Here's what's happening with your campus activities.
+          </p>
+        </div>
+
+        {/* Stylish green points */}
+        <div className="relative flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white font-semibold shadow-md">
+          {green}
+          <span className="absolute -inset-0.5 rounded-full bg-green-400 opacity-30 blur-sm"></span>
+        </div>
       </div>
 
       {/* Quick stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: "Active Requests", value: totalPendingRequests, icon: FileText, color: "text-primary" },
-          { label: "Approved Events", value: totalSuccessRequests, icon: CheckCircle2, color: "text-success" },
-          { label: "Issues Reported", value: totalEvents, icon: Wrench, color: "text-warning" },
+          {
+            label: "Active Requests",
+            value: totalPendingRequests,
+            icon: FileText,
+            color: "text-primary",
+          },
+          {
+            label: "Approved Requests",
+            value: totalSuccessRequests,
+            icon: CheckCircle2,
+            color: "text-success",
+          },
+          {
+            label: "Total Reported",
+            value: totalEvents,
+            icon: Wrench,
+            color: "text-warning",
+          },
         ].map((stat, index) => (
           <motion.div
             key={stat.label}
@@ -214,7 +267,9 @@ const StudentDashboard =  () => {
           >
             <div className="flex items-center justify-between mb-3">
               <stat.icon className={`w-6 h-6 ${stat.color}`} />
-              <span className="text-2xl font-display font-bold">{stat.value}</span>
+              <span className="text-2xl font-display font-bold">
+                {stat.value}
+              </span>
             </div>
             <p className="text-sm text-muted-foreground">{stat.label}</p>
           </motion.div>
@@ -230,7 +285,9 @@ const StudentDashboard =  () => {
           className="bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-6 text-primary-foreground"
         >
           <Calendar className="w-10 h-10 mb-4" />
-          <h3 className="font-display text-xl font-bold mb-2">Request an Event</h3>
+          <h3 className="font-display text-xl font-bold mb-2">
+            Request an Event
+          </h3>
           <p className="text-primary-foreground/80 mb-4">
             Book a room for your next class, meeting, or campus event.
           </p>
@@ -248,13 +305,15 @@ const StudentDashboard =  () => {
           className="bg-gradient-to-br from-warning to-warning/80 rounded-2xl p-6 text-warning-foreground"
         >
           <Wrench className="w-10 h-10 mb-4" />
-          <h3 className="font-display text-xl font-bold mb-2">Report an Issue</h3>
+          <h3 className="font-display text-xl font-bold mb-2">
+            Report an Issue
+          </h3>
           <p className="text-warning-foreground/80 mb-4">
             Spot a problem? Report it instantly and earn Green Points!
           </p>
           <Button variant="glass" asChild>
             <Link to="/dashboard/student/maintenance">
-              Snap & Fix <ArrowRight className="ml-2 w-4 h-4" />
+              Create Issue <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </Button>
         </motion.div>

@@ -151,12 +151,6 @@ const MaintenanceDashboard = () => {
             );
           })}
         </div>
-
-        <div className="p-4 border-t border-border text-center">
-          <Button variant="ghost" asChild>
-            <Link to="/dashboard/maintenance/tickets">View All Tickets</Link>
-          </Button>
-        </div>
       </motion.div>
     </DashboardLayout>
   );

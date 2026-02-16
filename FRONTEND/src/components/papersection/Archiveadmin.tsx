@@ -5,9 +5,7 @@ import {
   Trash2, AlertCircle, RefreshCw, LayoutDashboard, Lock, LogIn
 } from "lucide-react";
 import Footer from "../landing/Footer";
-// REMOVED: import AdminNavbar from "./Adminnavbar"; -> App.jsx handles this now
 
-// --- Types ---
 interface Paper {
   id: string;
   title: string;
@@ -194,7 +192,6 @@ export default function ArchiveAdmin() {
   // 3. Logged In -> Show Dashboard
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
-      {/* REMOVED: <AdminNavbar /> because App.jsx handles it now */}
 
       {/* HEADER SECTION */}
       <div className="bg-white border-b border-slate-200 pt-32 pb-10 px-4">

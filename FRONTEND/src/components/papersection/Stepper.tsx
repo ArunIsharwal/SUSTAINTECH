@@ -14,7 +14,6 @@ interface StepperProps {
 export default function Stepper({ steps, currentStep }: StepperProps) {
   return (
     <div className="w-full max-w-5xl mx-auto mt-6 px-4 sm:px-0 select-none">
-      {/* Main Container: White with subtle border/shadow */}
       <div
         className="flex items-center justify-between
         rounded-2xl

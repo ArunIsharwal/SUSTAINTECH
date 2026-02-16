@@ -1,409 +1,25 @@
-// import { ReactNode } from "react";
-// import { motion } from "framer-motion";
-// import { 
-//   Leaf, 
-//   Home, 
-//   Calendar, 
-//   FileText, 
-//   Wrench, 
-//   BarChart3, 
-//   Settings, 
-//   LogOut,
-//   Bell,
-//   User,
-//   Menu
-// } from "lucide-react";
-// import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { Button } from "@/components/ui/button";
-// import { useState } from "react";
-
-// interface DashboardLayoutProps {
-//   children: ReactNode;
-//   userRole: "student" | "faculty" | "admin" | "maintenance";
-//   userName?: string;
-// }
-
-// const roleNavItems = {
-//   student: [
-//     { icon: Home, label: "Dashboard", path: "/dashboard/student" },
-//     { icon: Calendar, label: "Request Event", path: "/dashboard/student/request" },
-//     { icon: FileText, label: "My Requests", path: "/dashboard/student/requests" },
-//     { icon: Wrench, label: "Report Issue", path: "/dashboard/student/maintenance" },
-//     { icon: BarChart3, label: "Green Points", path: "/dashboard/student/points" },
-//   ],
-//   faculty: [
-//     { icon: Home, label: "Dashboard", path: "/dashboard/faculty" },
-//     { icon: FileText, label: "Pending Approvals", path: "/dashboard/faculty/approvals" },
-//     { icon: Calendar, label: "My Classes", path: "/dashboard/faculty/classes" },
-//     { icon: BarChart3, label: "Reports", path: "/dashboard/faculty/reports" },
-//   ],
-//   admin: [
-//     { icon: Home, label: "Dashboard", path: "/dashboard/admin" },
-//     { icon: FileText, label: "All Requests", path: "/dashboard/admin/requests" },
-//     { icon: Calendar, label: "Room Management", path: "/dashboard/admin/rooms" },
-//     { icon: Wrench, label: "Maintenance", path: "/dashboard/admin/maintenance" },
-//     { icon: BarChart3, label: "Analytics", path: "/dashboard/admin/analytics" },
-//     { icon: Settings, label: "Settings", path: "/dashboard/admin/settings" },
-//   ],
-//   maintenance: [
-//     { icon: Home, label: "Dashboard", path: "/dashboard/maintenance" },
-//     { icon: Wrench, label: "Open Tickets", path: "/dashboard/maintenance/tickets" },
-//     { icon: FileText, label: "My Tasks", path: "/dashboard/maintenance/tasks" },
-//     { icon: BarChart3, label: "Performance", path: "/dashboard/maintenance/performance" },
-//   ],
-// };
-
-// const DashboardLayout = ({ children, userRole, userName = "User" }: DashboardLayoutProps) => {
-//   const location = useLocation();
-//   const navigate = useNavigate();
-//   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
-//   const navItems = roleNavItems[userRole];
-
-//   return (
-//     <div className="min-h-screen bg-background flex">
-//       {/* Sidebar */}
-//       <aside
-//         className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar transform transition-transform duration-300 lg:translate-x-0 ${
-//           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-//         }`}
-//       >
-//         <div className="flex flex-col h-full">
-//           {/* Logo */}
-//           <div className="p-6 border-b border-sidebar-border">
-//             <Link to="/" className="flex items-center gap-2">
-//               <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center">
-//                 <Leaf className="w-6 h-6 text-sidebar-primary-foreground" />
-//               </div>
-//               <span className="font-display text-xl font-bold text-sidebar-foreground">OptiCampus</span>
-//             </Link>
-//           </div>
-
-//           {/* Navigation */}
-//           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-//             {navItems.map((item) => {
-//               const isActive = location.pathname === item.path;
-//               return (
-//                 <Link
-//                   key={item.path}
-//                   to={item.path}
-//                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-//                     isActive
-//                       ? "bg-sidebar-accent text-sidebar-primary"
-//                       : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-//                   }`}
-//                   onClick={() => setSidebarOpen(false)}
-//                 >
-//                   <item.icon className="w-5 h-5" />
-//                   {item.label}
-//                 </Link>
-//               );
-//             })}
-//           </nav>
-
-//           {/* User section */}
-//           <div className="p-4 border-t border-sidebar-border">
-//             <div className="flex items-center gap-3 mb-4 px-4">
-//               <div className="w-10 h-10 rounded-full bg-sidebar-accent flex items-center justify-center">
-//                 <User className="w-5 h-5 text-sidebar-foreground" />
-//               </div>
-//               <div className="flex-1 min-w-0">
-//                 <p className="text-sm font-medium text-sidebar-foreground truncate">{userName}</p>
-//                 <p className="text-xs text-sidebar-foreground/50 capitalize">{userRole}</p>
-//               </div>
-//             </div>
-//             <Button
-//               variant="ghost"
-//               className="w-full justify-start text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
-//               onClick={() => navigate("/login")}
-//             >
-//               <LogOut className="w-5 h-5 mr-3" />
-//               Sign Out
-//             </Button>
-//           </div>
-//         </div>
-//       </aside>
-
-//       {/* Mobile overlay */}
-//       {sidebarOpen && (
-//         <div
-//           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-//           onClick={() => setSidebarOpen(false)}
-//         />
-//       )}
-
-//       {/* Main content */}
-//       <div className="flex-1 lg:ml-64">
-//         {/* Top bar */}
-//         <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
-//           <div className="flex items-center justify-between px-6 py-4">
-//             <div className="flex items-center gap-4">
-//               <Button
-//                 variant="ghost"
-//                 size="icon"
-//                 className="lg:hidden"
-//                 onClick={() => setSidebarOpen(true)}
-//               >
-//                 <Menu className="w-5 h-5" />
-//               </Button>
-//               <h1 className="font-display text-xl font-semibold capitalize">
-//                 {userRole} Dashboard
-//               </h1>
-//             </div>
-//             <div className="flex items-center gap-3">
-//               <Button variant="ghost" size="icon" className="relative">
-//                 <Bell className="w-5 h-5" />
-//                 <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
-//               </Button>
-//               <Button variant="ghost" size="icon" asChild>
-//                 <Link to={`/dashboard/${userRole}/settings`}>
-//                   <Settings className="w-5 h-5" />
-//                 </Link>
-//               </Button>
-//             </div>
-//           </div>
-//         </header>
-
-//         {/* Page content */}
-//         <main className="p-6">
-//           <motion.div
-//             initial={{ opacity: 0, y: 10 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.3 }}
-//           >
-//             {children}
-//           </motion.div>
-//         </main>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DashboardLayout;
-
-
-// import { ReactNode, useState, useEffect } from "react";
-// import { motion } from "framer-motion";
-// import {
-//   Leaf,
-//   Home,
-//   Calendar,
-//   FileText,
-//   Wrench,
-//   BarChart3,
-//   Settings,
-//   LogOut,
-//   Bell,
-//   User,
-//   Menu,
-// } from "lucide-react";
-// import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { Button } from "@/components/ui/button";
-
-// interface DashboardLayoutProps {
-//   children: ReactNode;
-//   userRole: "student" | "faculty" | "admin" | "maintenance";
-//   userName?: string; // optional (kept for compatibility)
-// }
-
-// const roleNavItems = {
-//   student: [
-//     { icon: Home, label: "Dashboard", path: "/dashboard/student" },
-//     { icon: Calendar, label: "Request Event", path: "/dashboard/student/request" },
-//     { icon: FileText, label: "My Requests", path: "/dashboard/student/requests" },
-//     { icon: Wrench, label: "Report Issue", path: "/dashboard/student/maintenance" },
-//     { icon: BarChart3, label: "Green Points", path: "/dashboard/student/points" },
-//   ],
-//   faculty: [
-//     { icon: Home, label: "Dashboard", path: "/dashboard/faculty" },
-//     { icon: FileText, label: "Pending Approvals", path: "/dashboard/faculty/approvals" },
-//     { icon: Calendar, label: "My Classes", path: "/dashboard/faculty/classes" },
-//     { icon: BarChart3, label: "Reports", path: "/dashboard/faculty/reports" },
-//   ],
-//   admin: [
-//     { icon: Home, label: "Dashboard", path: "/dashboard/admin" },
-//     { icon: FileText, label: "All Requests", path: "/dashboard/admin/requests" },
-//     { icon: Calendar, label: "Room Management", path: "/dashboard/admin/rooms" },
-//     { icon: Wrench, label: "Maintenance", path: "/dashboard/admin/maintenance" },
-//     { icon: BarChart3, label: "Analytics", path: "/dashboard/admin/analytics" },
-//     { icon: Settings, label: "Settings", path: "/dashboard/admin/settings" },
-//   ],
-//   maintenance: [
-//     { icon: Home, label: "Dashboard", path: "/dashboard/maintenance" },
-//     { icon: Wrench, label: "Open Tickets", path: "/dashboard/maintenance/tickets" },
-//     { icon: FileText, label: "My Tasks", path: "/dashboard/maintenance/tasks" },
-//     { icon: BarChart3, label: "Performance", path: "/dashboard/maintenance/performance" },
-//   ],
-// };
-
-// const DashboardLayout = ({ children, userRole, userName }: DashboardLayoutProps) => {
-//   const location = useLocation();
-//   const navigate = useNavigate();
-//   const [sidebarOpen, setSidebarOpen] = useState(false);
-//   const [currentUserName, setCurrentUserName] = useState<string>("User");
-
-//   // ✅ Read user from localStorage ONCE
-//   useEffect(() => {
-//     const storedUser = localStorage.getItem("user");
-//     if (storedUser) {
-//       try {
-//         const parsed = JSON.parse(storedUser);
-//         if (parsed?.name) {
-//           setCurrentUserName(parsed.name);
-//           console.log("User loaded from localStorage:", parsed.name);
-//         }
-//       } catch {}
-//     }
-//   }, []);
-
-//   const navItems = roleNavItems[userRole];
-
-//   return (
-//     <div className="min-h-screen bg-background flex">
-//       {/* Sidebar */}
-//       <aside
-//         className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar transform transition-transform duration-300 lg:translate-x-0 ${
-//           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-//         }`}
-//       >
-//         <div className="flex flex-col h-full">
-//           {/* Logo */}
-//           <div className="p-6 border-b border-sidebar-border">
-//             <Link to="/" className="flex items-center gap-2">
-//               <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center">
-//                 <Leaf className="w-6 h-6 text-sidebar-primary-foreground" />
-//               </div>
-//               <span className="font-display text-xl font-bold text-sidebar-foreground">
-//                 OptiCampus
-//               </span>
-//             </Link>
-//           </div>
-
-//           {/* Navigation */}
-//           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-//             {navItems.map((item) => {
-//               const isActive = location.pathname === item.path;
-//               return (
-//                 <Link
-//                   key={item.path}
-//                   to={item.path}
-//                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-//                     isActive
-//                       ? "bg-sidebar-accent text-sidebar-primary"
-//                       : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-//                   }`}
-//                   onClick={() => setSidebarOpen(false)}
-//                 >
-//                   <item.icon className="w-5 h-5" />
-//                   {item.label}
-//                 </Link>
-//               );
-//             })}
-//           </nav>
-
-//           {/* User section */}
-//           <div className="p-4 border-t border-sidebar-border">
-//             <div className="flex items-center gap-3 mb-4 px-4">
-//               <div className="w-10 h-10 rounded-full bg-sidebar-accent flex items-center justify-center">
-//                 <User className="w-5 h-5 text-sidebar-foreground" />
-//               </div>
-//               <div className="flex-1 min-w-0">
-//                 <p className="text-sm font-medium text-sidebar-foreground truncate">
-//                   {userName || currentUserName}
-//                 </p>
-//                 <p className="text-xs text-sidebar-foreground/50 capitalize">
-//                   {userRole}
-//                 </p>
-//               </div>
-//             </div>
-
-//             <Button
-//               variant="ghost"
-//               className="w-full justify-start text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
-//               onClick={() => {
-//                 localStorage.removeItem("user");
-//                 navigate("/login");
-//               }}
-//             >
-//               <LogOut className="w-5 h-5 mr-3" />
-//               Sign Out
-//             </Button>
-//           </div>
-//         </div>
-//       </aside>
-
-//       {/* Overlay */}
-//       {sidebarOpen && (
-//         <div
-//           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-//           onClick={() => setSidebarOpen(false)}
-//         />
-//       )}
-
-//       {/* Main content */}
-//       <div className="flex-1 lg:ml-64">
-//         <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
-//           <div className="flex items-center justify-between px-6 py-4">
-//             <div className="flex items-center gap-4">
-//               <Button
-//                 variant="ghost"
-//                 size="icon"
-//                 className="lg:hidden"
-//                 onClick={() => setSidebarOpen(true)}
-//               >
-//                 <Menu className="w-5 h-5" />
-//               </Button>
-//               <h1 className="font-display text-xl font-semibold capitalize">
-//                 {userRole} Dashboard
-//               </h1>
-//             </div>
-//             <div className="flex items-center gap-3">
-//               <Button variant="ghost" size="icon" className="relative">
-//                 <Bell className="w-5 h-5" />
-//                 <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
-//               </Button>
-//               <Button variant="ghost" size="icon" asChild>
-//                 <Link to={`/dashboard/${userRole}/settings`}>
-//                   <Settings className="w-5 h-5" />
-//                 </Link>
-//               </Button>
-//             </div>
-//           </div>
-//         </header>
-
-//         <main className="p-6">
-//           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-//             {children}
-//           </motion.div>
-//         </main>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DashboardLayout;
-
-
-
-
-
 import { ReactNode, useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Leaf,
   Home,
   Calendar,
   FileText,
   Wrench,
-  BarChart3,
   Settings,
   LogOut,
   Bell,
   User,
   Menu,
+  X,
+  LayoutDashboard,
+  ShieldCheck,
+  ClipboardList,
+  BarChart3,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils"; // Assuming you have a cn utility for tailwind classes
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -413,23 +29,25 @@ interface DashboardLayoutProps {
 
 const roleNavItems = {
   student: [
-    { icon: Home, label: "Dashboard", path: "/dashboard/student" },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/student" },
     { icon: Calendar, label: "Request Event", path: "/dashboard/student/request" },
-    { icon: FileText, label: "My Requests", path: "/dashboard/student/myrequest" }, // ✅ FIX
+    { icon: ClipboardList, label: "My Requests", path: "/dashboard/student/myrequest" },
     { icon: Wrench, label: "Report Issue", path: "/dashboard/student/maintenance" },
   ],
-faculty: [
-  { icon: Home, label: "Dashboard", path: "/dashboard/faculty" },
-  { icon: Calendar, label: "Event Requests", path: "/dashboard/faculty/event-requests" },
-  { icon: Wrench, label: "Maintenance Status", path: "/dashboard/faculty/maintenance-status" },
-],
-
-
+  faculty: [
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/faculty" },
+    { icon: Calendar, label: "Event Requests", path: "/dashboard/faculty/event-requests" },
+    { icon: Wrench, label: "Maintenance Status", path: "/dashboard/faculty/maintenance-status" },
+  ],
   admin: [
-    { icon: Home, label: "Dashboard", path: "/dashboard/admin" },
+    { icon: LayoutDashboard, label: "Admin Console", path: "/dashboard/admin" },
+    { icon: ShieldCheck, label: "User Management", path: "/dashboard/admin/users" },
+    { icon: BarChart3, label: "Analytics", path: "/dashboard/admin/analytics" },
   ],
   maintenance: [
-    { icon: Home, label: "Dashboard", path: "/dashboard/maintenance" },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/maintenance" },
+    // { icon: Wrench, label: "Active Tasks", path: "/dashboard/maintenance/tasks" },
+    // { icon: FileText, label: "Work Logs", path: "/dashboard/maintenance/logs" },
   ],
 };
 
@@ -443,28 +61,29 @@ const DashboardLayout = ({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [storedUserName, setStoredUserName] = useState<string | null>(null);
 
-  // Always prefer the currently logged-in user saved in localStorage.
-  // This avoids showing hardcoded/incorrect names when switching dashboards.
-  useEffect(() => {
+  const syncUser = () => {
     const raw = localStorage.getItem("user");
-    if (!raw) {
-      setStoredUserName(null);
-      return;
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        setStoredUserName(parsed?.name || null);
+      } catch {
+        setStoredUserName(null);
+      }
     }
+  };
 
-    try {
-      const parsed = JSON.parse(raw);
-      setStoredUserName(typeof parsed?.name === "string" ? parsed.name : null);
-    } catch {
-      setStoredUserName(null);
-    }
+  useEffect(() => {
+    syncUser();
+    window.addEventListener("storage", syncUser);
+    return () => window.removeEventListener("storage", syncUser);
   }, []);
 
   const displayName = useMemo(() => {
     return storedUserName || userName || "User";
   }, [storedUserName, userName]);
 
-  const navItems = roleNavItems[userRole];
+  const navItems = roleNavItems[userRole] || [];
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -473,28 +92,37 @@ const DashboardLayout = ({
   };
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-background flex">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar transform transition-transform duration-300 lg:translate-x-0 ${
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-card border-r border-border transition-transform duration-300 ease-in-out lg:translate-x-0 shadow-sm",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        )}
       >
         <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="p-6 border-b border-sidebar-border">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center">
-                <Leaf className="w-6 h-6 text-sidebar-primary-foreground" />
+          {/* Logo Area */}
+          <div className="p-6 mb-2">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
+                <Leaf className="w-6 h-6 text-primary-foreground" />
               </div>
-              <span className="font-display text-xl font-bold text-sidebar-foreground">
-                OptiCampus
-              </span>
+              <div className="flex flex-col">
+                <span className="font-display text-xl font-bold tracking-tight text-foreground">
+                  OptiCampus
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Smart Solutions
+                </span>
+              </div>
             </Link>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {/* Navigation Scroll Area */}
+          <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+            <p className="px-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
+              Menu
+            </p>
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -502,81 +130,94 @@ const DashboardLayout = ({
                   key={item.label}
                   to={item.path}
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                  className={cn(
+                    "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 relative",
                     isActive
-                      ? "bg-sidebar-accent text-sidebar-primary"
-                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                  }`}
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
                 >
-                  <item.icon className="w-5 h-5" />
+                  {isActive && (
+                    <motion.div
+                      layoutId="sidebar-active"
+                      className="absolute left-0 w-1 h-6 bg-primary rounded-r-full"
+                    />
+                  )}
+                  <item.icon className={cn("w-5 h-5 transition-colors", isActive ? "text-primary" : "group-hover:text-foreground")} />
                   {item.label}
                 </Link>
               );
             })}
           </nav>
 
-          {/* User */}
-          <div className="p-4 border-t border-sidebar-border">
-            <div className="flex items-center gap-3 mb-4 px-4">
-              <div className="w-10 h-10 rounded-full bg-sidebar-accent flex items-center justify-center">
-                <User className="w-5 h-5 text-sidebar-foreground" />
+          {/* User Profile & Logout Section */}
+          <div className="p-4 mt-auto border-t border-border bg-muted/30">
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-background border border-border shadow-sm mb-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                <User className="w-5 h-5 text-primary" />
               </div>
-              <div>
-                <p className="text-sm font-medium text-sidebar-foreground">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground truncate">
                   {displayName}
                 </p>
-                <p className="text-xs text-sidebar-foreground/50 capitalize">
+                <p className="text-[11px] text-muted-foreground capitalize flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
                   {userRole}
                 </p>
               </div>
             </div>
 
             <Button
-              
-              className="w-full justify-start"
+              variant="ghost"
+              className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors group rounded-xl"
               onClick={handleLogout}
             >
-              <LogOut className="w-5 h-5 mr-3" />
-              Sign Out
+              <LogOut className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform" />
+              <span className="font-semibold">Sign Out</span>
             </Button>
           </div>
         </div>
       </aside>
 
-      {/* Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      {/* Mobile Overlay */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
-      {/* Main */}
-      <div className="flex-1 lg:ml-64">
-        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b">
-          <div className="flex justify-between px-6 py-4">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
-              <h1 className="font-display text-xl font-semibold capitalize">
-                {userRole} Dashboard
+      {/* Content Wrapper */}
+      <div className="flex-1 flex flex-col lg:ml-72 min-w-0">
+        <header className="sticky top-0 z-30 h-20 bg-white/80 dark:bg-background/80 backdrop-blur-xl border-b border-border/50 flex items-center justify-between px-6 lg:px-10">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden rounded-xl bg-muted"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground capitalize">
+                {userRole} Portal
               </h1>
-            </div>
-            <div className="flex items-center gap-3">
-              <Bell className="w-5 h-5" />
-              <Settings className="w-5 h-5" />
             </div>
           </div>
         </header>
 
-        <main className="p-6">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <main className="p-6 lg:p-10 flex-1">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
             {children}
           </motion.div>
         </main>

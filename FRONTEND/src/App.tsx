@@ -104,7 +104,7 @@ const App = () => (
             <Route path="/dashboard/faculty/maintenance-status" element={<FacultyMaintenanceStatus />} />
 
             {/* Catch-all */}
-            <Route path="*" element={<NotFound />} />
+            {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

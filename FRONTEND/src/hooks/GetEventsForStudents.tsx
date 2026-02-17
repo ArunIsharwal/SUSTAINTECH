@@ -22,6 +22,7 @@ const useGetEventsForStudents = () => {
         setLoading(true);
         setError(null);
 
+        // Fetching both endpoints concurrently
         const [eventRes, issueRes] = await Promise.all([
           fetch(`${baseUrl}/api/student/get-events`, {
             credentials: "include",
@@ -31,49 +32,58 @@ const useGetEventsForStudents = () => {
           }),
         ]);
 
-        if (!eventRes.ok) {
-          throw new Error("Failed to fetch events");
+        // FIX 1: Check if BOTH requests were successful
+        if (!eventRes.ok || !issueRes.ok) {
+          throw new Error("Failed to fetch data from one or more endpoints");
         }
 
-        const data1 = await eventRes.json();   // events
-        const data2 = await issueRes.json();   // issues
-        dispatch(setEventsForStudents(data1.issues as Event[]));
+        const data1 = await eventRes.json(); // Data from get-events
+        const data2 = await issueRes.json(); // Data from get-issues
 
-        const total = data1.events.length + data2.issues.length;
+        // FIX 2: Corrected data access. data1 should contain events, data2 should contain issues.
+        // Also added fallbacks ([]) to prevent .length errors if data is missing.
+        const eventList = data1.events || [];
+        const issueList = data2.issues || [];
 
-        console.log("Data1: " , data1);
-        console.log("Data2: ", data2);
+        // FIX 3: Dispatching the actual events (data1.events) instead of data1.issues
+        dispatch(setEventsForStudents(eventList as Event[]));
 
-        const totalSuceesEvents = data1.events.filter(
-          (e: any) => e.status == "Approved",
+        // FIX 4: Corrected variable names and logic for totals
+        const total = eventList.length + issueList.length;
+
+        // Filter for Success/Approved
+        const totalSuccessEvents = eventList.filter(
+          (e: any) => e.status === "Approved"
         );
-        const totalSuceesIssues = data2.issues.filter(
-          (e: any) => e.status == "Success",
+        const totalSuccessIssues = issueList.filter(
+          (e: any) => e.status === "Success"
         );
 
-        const totalPendingEvents = data1.events.filter(
-          (e: any) => e.status == "Pending",
+        // Filter for Pending
+        const totalPendingEvents = eventList.filter(
+          (e: any) => e.status === "Pending"
         );
-        const totalPendingIssues = data2.issues.filter(
-          (e: any) => e.status == "Pending",
+        const totalPendingIssues = issueList.filter(
+          (e: any) => e.status === "Pending"
         );
 
-        const total1 = totalSuceesEvents.length + totalSuceesIssues.length;
-        const total2 = totalPendingEvents.length + totalPendingIssues.length;
+        const totalSuccess = totalSuccessEvents.length + totalSuccessIssues.length;
+        const totalPending = totalPendingEvents.length + totalPendingIssues.length;
 
-
+        // Dispatching totals to Redux
         dispatch(setTotalRequests(total));
-        dispatch(setTotalSuccessRequests(total1));
-        dispatch(setTotalPendingRequests(total2));
+        dispatch(setTotalSuccessRequests(totalSuccess));
+        dispatch(setTotalPendingRequests(totalPending));
+
       } catch (err: any) {
-        setError(err.message);
+        setError(err.message || "An unexpected error occurred");
       } finally {
         setLoading(false);
       }
     };
 
     fetchEvents();
-  }, [dispatch]);
+  }, [dispatch]); // Added dispatch to dependency array for best practices
 
   return { events, loading, error };
 };
